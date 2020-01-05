@@ -1,4 +1,4 @@
-package tech.openEdgn.log4k
+package tech.openEdgn.tools4k
 
 import org.junit.Test
 
