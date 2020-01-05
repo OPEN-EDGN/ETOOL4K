@@ -7,10 +7,12 @@ import kotlin.reflect.KClass
 
 object LoggerConfig {
 
-    val output: LoggerOutput by lazy { LoggerOutput(this) }
-    val implClass: KClass<out Log> = Logger::class
 
-    val  outputFormat = mapOf(Pair("info","asa"))
+    const val outputFormat: String= "[@{date:yyyy/MM/dd HH:mm:ss}]-[@{level:%-5s}]-@{classPath:name}-@{message}\n@{throwable:all}"
+
+    val output: LoggerOutput by lazy (LazyThreadSafetyMode.SYNCHRONIZED){ LoggerOutput(this) }
+
+    val implClass: KClass<out Log> = Logger::class
 
     @Volatile
     var commandOutput:PrintStream = System.out

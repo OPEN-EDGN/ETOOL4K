@@ -2,6 +2,7 @@ package tech.openEdgn.logger4k
 
 import java.lang.RuntimeException
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 
 /**
  * # 日志类型划分
@@ -102,9 +103,7 @@ interface Log {
         private val defaultImplClass: KClass<out Log> = LoggerConfig.implClass
 
         fun getLogger(clazz: Class<out Any>):Log{
-            val constructor = defaultImplClass.java.getConstructor(Class::class.java)
-            constructor.isAccessible = true
-            return constructor.newInstance(clazz)
+            return Logger(clazz)
         }
         fun getLogger(clazz: KClass<out Any>) = getLogger(clazz.java)
 
