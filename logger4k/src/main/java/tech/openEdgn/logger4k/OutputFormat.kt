@@ -16,7 +16,6 @@ class LineFormat(format: String) {
     private val loggerFormatMap: Map<String, RawFormat>
     private val newFormat: String
 
-
     init {
         val list = ArrayList<LoggerItemOutputFormat<out Any?>>()
         listOf<LoggerItemOutputFormat<out Any?>>(DateFormat(format).initVal(),
@@ -77,7 +76,7 @@ class LineFormat(format: String) {
 
 abstract class LoggerItemOutputFormat<T>(private val format: String) : Comparable<LoggerItemOutputFormat<out Any?>> {
     abstract val formatHeader: String
-    abstract val formatFoot: String
+    private val formatFoot: String = "}"
     abstract val testData: T
     protected abstract val defaultParams: String
     private var index: Int = -1
@@ -85,16 +84,17 @@ abstract class LoggerItemOutputFormat<T>(private val format: String) : Comparabl
     protected lateinit var params: String
     @Synchronized
     fun initVal(): LoggerItemOutputFormat<T> {
-        index = format.indexOf(formatHeader)
+        val rawHeader = "@{$formatHeader"
+        index = format.indexOf(rawHeader)
         if (index == -1) {
-            throw RuntimeException("Item[$formatHeader$formatFoot] not found.")
+            throw RuntimeException("Item[$rawHeader$formatFoot] not found.")
         }
-        val endIndex = format.substring(index + formatHeader.length)
-                .indexOf(formatFoot) + formatHeader.length + index
+        val endIndex = format.substring(index + rawHeader.length)
+                .indexOf(formatFoot) + rawHeader.length + index
         if (endIndex == -1) {
-            throw RuntimeException("Item[$formatHeader$formatFoot] not closed.")
+            throw RuntimeException("Item[$rawHeader$formatFoot] not closed.")
         }
-        rawParams = format.substring(index + formatHeader.length, endIndex)
+        rawParams = format.substring(index + rawHeader.length, endIndex)
         params = rawParams.let {
             if (it.trim().isEmpty() || (it.trim() == ":")) {
                 defaultParams
@@ -105,12 +105,12 @@ abstract class LoggerItemOutputFormat<T>(private val format: String) : Comparabl
         try {
             tryFormat(testData)
         } catch (e: Exception) {
-            throw RuntimeException("Item[$formatHeader$formatFoot]=> unknown set [$params]. ", e)
+            throw RuntimeException("Item[$rawHeader$formatFoot]=> unknown set [$params]. ", e)
         }
         return this
     }
 
-    fun toPropString() = "$formatHeader$rawParams$formatFoot"
+    fun toPropString() = "@{$formatHeader$rawParams$formatFoot"
 
     @Throws(Exception::class)
     abstract fun tryFormat(data: T): String
@@ -133,8 +133,7 @@ abstract class LoggerItemOutputFormat<T>(private val format: String) : Comparabl
 class DateFormat(format: String) : LoggerItemOutputFormat<Long>(format) {
     private val simpleDateFormat by lazy { SimpleDateFormat(params) }
     override fun tryFormat(data: Long): String = simpleDateFormat.format(data)
-    override val formatHeader = "@{date"
-    override val formatFoot = "}"
+    override val formatHeader = "date"
     override val defaultParams = "yyyy-MM-dd HH:mm:ss"
     override val testData: Long = System.currentTimeMillis()
     override fun formatInclude(data: Any) = if (data is Long) {
@@ -149,8 +148,7 @@ class DateFormat(format: String) : LoggerItemOutputFormat<Long>(format) {
  */
 class LevelFormat(format: String) : LoggerItemOutputFormat<LoggerLevel>(format) {
     override fun tryFormat(data: LoggerLevel): String = String.format(params, data.toString())
-    override val formatHeader = "@{level"
-    override val formatFoot = "}"
+    override val formatHeader = "level"
     override val defaultParams = "%s"
     override val testData = LoggerLevel.DEBUG
     override fun formatInclude(data: Any) = if (data is LoggerLevel) {
@@ -170,8 +168,7 @@ class ClassFormat(format: String) : LoggerItemOutputFormat<Class<out Any>>(forma
         else -> data.name
     }
 
-    override val formatHeader = "@{classPath"
-    override val formatFoot = "}"
+    override val formatHeader = "classPath"
     override val defaultParams = "name"
     override val testData = javaClass
     override fun formatInclude(data: Any) = kotlin.run {
@@ -197,8 +194,7 @@ class ThreadNameFormat(format: String) : LoggerItemOutputFormat<String>(format) 
                 }
             }
 
-    override val formatHeader = "@{thread"
-    override val formatFoot = "}"
+    override val formatHeader = "thread"
     override val defaultParams = Integer.MAX_VALUE.toString()
     override val testData: String = Thread.currentThread().name!!
 
@@ -223,8 +219,7 @@ class MessageFormat(format: String) : LoggerItemOutputFormat<String>(format) {
                 }
             }
 
-    override val formatHeader = "@{message"
-    override val formatFoot = "}"
+    override val formatHeader = "message"
     override val defaultParams = Integer.MAX_VALUE.toString()
     override val testData = "message"
 
@@ -242,14 +237,13 @@ class MessageFormat(format: String) : LoggerItemOutputFormat<String>(format) {
 class ThrowableFormat(format: String) : LoggerItemOutputFormat<Throwable?>(format) {
     override fun tryFormat(data: Throwable?): String = if (data != null) {
         when (params) {
-            "all" -> throwableFormat(data)
+            "all" -> "\r\n${throwableFormat(data)}"
             else -> if (data.message == null) {
-                ""
+                "non message."
             } else {
-                data.message!!
+                data.message!!.replace("\r", "")
+                        .replace("\n", "")
             }
-                    .replace("\r", "")
-                    .replace("\n", "")
         }
     } else {
         ""
@@ -266,10 +260,9 @@ class ThrowableFormat(format: String) : LoggerItemOutputFormat<Throwable?>(forma
         return array.toString(Charsets.UTF_8).trim()
     }
 
-    override val formatHeader = "@{throwable"
-    override val formatFoot = "}"
+    override val formatHeader = "throwable"
     override val defaultParams = "all"
-    override val testData = RuntimeException("test ")
+    override val testData = RuntimeException("test")
     override fun formatInclude(data: Any) = if (data is Throwable) {
         data
     } else {
