@@ -2,7 +2,6 @@ buildscript {
     val kotlinVersion :String by extra("1.3.50")
 
     repositories {
-        mavenLocal()
         maven { url = uri("https://maven.aliyun.com/repository/public/") }
         google()
         jcenter()
@@ -17,7 +16,6 @@ buildscript {
 
 allprojects {
     repositories {
-        mavenLocal()
         maven { url = uri("https://maven.aliyun.com/repository/public/") }
         google()
         jcenter()
