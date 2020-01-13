@@ -104,7 +104,7 @@ fun File.crc32sum() = this.calculatedHash(CRC32)
 //## With File END
 
 
-inline fun Closeable?.safeClose() {
+fun Closeable?.safeClose() {
     try {
         this?.close()
     } catch (e: Exception) {
