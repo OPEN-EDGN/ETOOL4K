@@ -2,7 +2,11 @@
 
 ETOOL4K (Open-EDGN's Toolbox for Kotlin) 是一個新穎且 100% 源代碼開放的輕量級 `Kotlin` 模塊。
 
-![](https://img.shields.io/badge/LICENSE-MIT-green.svg) ![](https://img.shields.io/badge/CODE-Kotlin-green.svg)  ![](https://img.shields.io/badge/PKG-Gradle-green.svg) 
+<p align="center" style="text-align: center">
+
+![](https://img.shields.io/badge/LICENSE-MIT-green.svg) ![](https://img.shields.io/badge/CODE-Kotlin-green.svg)  ![](https://img.shields.io/badge/BUILD-Gradle-green.svg) [![](https://jitpack.io/v/OPEN-EDGN/ETOOL4K.svg)](https://jitpack.io/#OPEN-EDGN/ETOOL4K)
+
+</p>
 
 ## 入门
 
