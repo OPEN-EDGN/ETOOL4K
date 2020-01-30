@@ -54,7 +54,18 @@ object LoggerConfig {
     private val headerFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
     private val logTempFileOutput: Array<PrintWriter?> = Array(2) { null }
-    private val pid =  ManagementFactory.getRuntimeMXBean().name.split("@")[0]
+    private val pid by lazy {
+        try {
+            val process = Class.forName("android.os.Process")
+            process.getMethod("myPid").invoke(null)
+        }catch (e:Exception){
+            try {
+                ManagementFactory.getRuntimeMXBean().name.split("@")[0]
+            }catch (_:Exception){
+                0
+            }
+        }
+    }
 
     private fun getOutputFile(date: Long = System.currentTimeMillis()) =
             File(loggerOutputDir,
