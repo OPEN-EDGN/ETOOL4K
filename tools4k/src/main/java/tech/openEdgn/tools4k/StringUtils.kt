@@ -1,4 +1,4 @@
-package tech.openEdgn.security4k
+package tech.openEdgn.tools4k
 
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -72,7 +72,7 @@ object StringUtils {
      * @return CRC32校验值
      */
     @JvmStatic
-    fun stringCrc32Hex(str: String) = IOUtils.calculatedCrc(str.byteInputStream(Charsets.UTF_8),CRC32())
+    fun stringCrc32Hex(str: String) = IOUtils.calculatedCrc(str.byteInputStream(Charsets.UTF_8), CRC32())
 
 
 
