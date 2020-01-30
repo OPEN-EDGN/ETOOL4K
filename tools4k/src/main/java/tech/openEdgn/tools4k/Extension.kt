@@ -1,6 +1,6 @@
-package tech.openEdgn.security4k
+package tech.openEdgn.tools4k
 
-import tech.openEdgn.security4k.METHOD.*
+import tech.openEdgn.tools4k.METHOD.*
 import java.io.Closeable
 import java.io.File
 import java.io.InputStream
@@ -17,7 +17,7 @@ import kotlin.text.Charsets.UTF_8
  * @return String 返回的字符串
  */
 fun InputStream.readText(charset: Charset = UTF_8): String {
-    return StringUtils.readInputStream(this,charset)
+    return StringUtils.readInputStream(this, charset)
 }
 
 /**
@@ -48,8 +48,8 @@ enum class METHOD(val algorithm: String){
  */
 fun InputStream.calculatedHash(method: METHOD):String{
     return when (method) {
-        MD5, SHA1,SHA224, SHA256,SHA384, SHA512 -> IOUtils.calculatedHash(this,method.algorithm)
-        CRC32 ->  IOUtils.calculatedCrc(this,java.util.zip.CRC32())
+        MD5, SHA1,SHA224, SHA256,SHA384, SHA512 -> IOUtils.calculatedHash(this, method.algorithm)
+        CRC32 -> IOUtils.calculatedCrc(this, java.util.zip.CRC32())
     }.toUpperCase( Locale.ENGLISH)
 }
 
@@ -61,7 +61,7 @@ fun InputStream.calculatedHash(method: METHOD):String{
  * @param charset Charset 编码
  * @return String 散列值字符串
  */
-fun String.calculatedHash(method: METHOD,charset: Charset = UTF_8) =
+fun String.calculatedHash(method: METHOD, charset: Charset = UTF_8) =
         this.byteInputStream(charset).calculatedHash(method)
 
 /**

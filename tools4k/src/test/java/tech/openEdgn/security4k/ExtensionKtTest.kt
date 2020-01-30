@@ -2,6 +2,10 @@ package tech.openEdgn.security4k
 
 import org.junit.Assert.*
 import org.junit.Test
+import tech.openEdgn.tools4k.METHOD
+import tech.openEdgn.tools4k.calculatedHash
+import tech.openEdgn.tools4k.readText
+import tech.openEdgn.tools4k.toPrintString
 import java.io.File
 import java.io.IOException
 import kotlin.random.Random
