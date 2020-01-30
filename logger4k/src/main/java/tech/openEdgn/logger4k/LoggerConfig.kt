@@ -86,7 +86,6 @@ object LoggerConfig {
                 val invoke = process.getMethod("getRuntimeMXBean").invoke(null)
                 (Class.forName("java.lang.management.RuntimeMXBean").getDeclaredMethod("getName").invoke(invoke) as String).split("@")[0].toInt()
             } catch (e: Exception) {
-                e.printStackTrace()
                 -1
             }
         }
