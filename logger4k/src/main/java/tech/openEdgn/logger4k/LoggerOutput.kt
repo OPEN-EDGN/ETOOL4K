@@ -1,5 +1,6 @@
 package tech.openEdgn.logger4k
 
+import tech.openEdgn.logger4k.LoggerConfig.loggerOutputHook
 import java.io.PrintStream
 import java.util.concurrent.Executors
 
@@ -23,10 +24,12 @@ class LoggerOutput(private val loggerConfig: LoggerConfig) {
     @Synchronized
     fun writeLine(outputItem: LoggerOutputItem) {
         threadPool.execute {
-            val outCommand: (PrintStream) -> Unit = {
+            val outCommand: (PrintStream?) -> Unit = {
                 val line = format.format(outputItem)
-                it.println(line)
                 loggerConfig.logFileOutput.println(line)
+                if (loggerOutputHook(outputItem).not()){
+                    it?.println(line)
+                }
             }
             when (outputItem.level) {
                 LoggerLevel.INFO -> {

@@ -1,6 +1,6 @@
-package tech.openEdgn.tools4k
+package tech.openEdgn.security4k
 
-import tech.openEdgn.tools4k.METHOD.*
+import tech.openEdgn.security4k.METHOD.*
 import java.io.Closeable
 import java.io.File
 import java.io.InputStream

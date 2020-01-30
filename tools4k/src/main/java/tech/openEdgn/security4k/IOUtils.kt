@@ -1,12 +1,9 @@
-package tech.openEdgn.tools4k
+package tech.openEdgn.security4k
 
-import java.io.Closeable
 import java.io.IOException
 import java.io.InputStream
 import java.math.BigInteger
 import java.security.MessageDigest
-import java.util.zip.CRC32
-import java.util.zip.CheckedInputStream
 import java.util.zip.Checksum
 
 

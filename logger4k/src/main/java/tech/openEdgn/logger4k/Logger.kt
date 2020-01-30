@@ -1,5 +1,7 @@
 package tech.openEdgn.logger4k
 
+import java.util.*
+
 /**
  * 日志实现类
  */
@@ -41,7 +43,7 @@ class Logger  constructor(private val clazz: Class<out Any>) :Log{
     }
 
      private fun outputLogger(loggerDate: Long, threadName:String, level: LoggerLevel, message: String, exception: Throwable?){
-         LoggerConfig.output.writeLine(LoggerOutput.LoggerOutputItem(clazz,loggerDate,threadName,level,message,exception))
+         LoggerConfig.output.writeLine(LoggerOutput.LoggerOutputItem(clazz,loggerDate,threadName.toUpperCase(Locale.ENGLISH),level,message,exception))
      }
 
 

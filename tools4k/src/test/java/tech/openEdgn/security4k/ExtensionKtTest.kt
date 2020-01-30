@@ -1,8 +1,7 @@
-package tech.openEdgn.tools4k
+package tech.openEdgn.security4k
 
 import org.junit.Assert.*
 import org.junit.Test
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import kotlin.random.Random
