@@ -5,7 +5,6 @@ import java.io.FileWriter
 import java.io.PrintStream
 import java.io.PrintWriter
 import java.lang.Exception
-import java.lang.management.ManagementFactory
 import java.text.SimpleDateFormat
 import kotlin.reflect.KClass
 
@@ -77,12 +76,17 @@ object LoggerConfig {
     private val logTempFileOutput: Array<PrintWriter?> = Array(2) { null }
     private val pid: Int by lazy {
         try {
+            //Android 获取 PID
             val process = Class.forName("android.os.Process")
             process.getMethod("myPid").invoke(null) as Int
         } catch (e: Exception) {
             try {
-                ManagementFactory.getRuntimeMXBean().name.split("@")[0].toInt()
-            } catch (_: Exception) {
+                // Java SE 获取 PID
+                val process = Class.forName("java.lang.management.ManagementFactory")
+                val invoke = process.getMethod("getRuntimeMXBean").invoke(null)
+                (Class.forName("java.lang.management.RuntimeMXBean").getDeclaredMethod("getName").invoke(invoke) as String).split("@")[0].toInt()
+            } catch (e: Exception) {
+                e.printStackTrace()
                 -1
             }
         }
